@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {getProduct,getProducts } from "../controllers/product.controller.js";
-import {verifyJWT} from "../utils/jwtverification.js"
+import {verifyJWT} from "../../middleware/jwtverification.js"
 
 
 const router = Router()

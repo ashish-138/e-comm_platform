@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getCartItems, addCartItems, updateCart } from "../controllers/cart.controller.js";
-import {verifyJWT} from "../utils/jwtverification.js"
+import {verifyJWT} from "../../middleware/jwtverification.js"
 
 
 const router = Router()

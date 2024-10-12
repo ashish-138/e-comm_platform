@@ -1,12 +1,10 @@
 import jwt from "jsonwebtoken"
-import User from "../models/user.model.js"
+import User from "../src/models/user.model.js"
 
 export const verifyJWT =async(req, res, next) => {
-    // console.log(req.header("x-auth-token"));
+    
     try {
         const token = req.header("x-auth-token")
-        
-        console.log(token);
         if (!token) {
             res.status(401).json("Unauthorized request")
         }
