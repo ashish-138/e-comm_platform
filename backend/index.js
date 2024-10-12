@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
-import DBconnect from "./db/index.js"
+import DBconnect from "./src/db/index.js"
 import { app } from "./src/app.js"
 
 
@@ -7,7 +7,7 @@ import { app } from "./src/app.js"
 dotenv.config()
 
 DBconnect().then(()=>{
-    app.listen(env.process.PORT,()=>{
+    app.listen(process.env.PORT,()=>{
         console.log("Server and db is connected")
     })
 }).catch((err)=>{
