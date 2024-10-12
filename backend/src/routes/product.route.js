@@ -1,13 +1,13 @@
 import { Router } from "express";
-import {getProduct,getProducts } from "../controllers/product.controller.js";
-import {verifyJWT} from "../../middleware/jwtverification.js"
+import {getProduct,getProductByCategory,getProducts } from "../controllers/product.controller.js";
 
 
 const router = Router()
-router.use(verifyJWT);
+
 
 router.route("/").get(getProducts)
 router.route("/:id").get(getProduct)
+router.route("/category/:category").get(getProductByCategory)
 
 
 

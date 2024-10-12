@@ -35,8 +35,13 @@ const registerUser = async (req, res) => {
 
 const checkEmail = async(req,res)=>{
     try {
-        const result = await User.find({email:req.params.email})
-        res.status(200).json(result?true:false)
+        const result = await User.findOne({email:req.params.email})
+        if(result){
+            res.status(200).json(true)
+        }else{
+            res.status(200).json(false)
+        }
+        
     } catch (error) {
         res.status(500)
     }
@@ -81,7 +86,12 @@ const loginUser = async (req, res) => {
 }
 
 
+const checkAuth = async(req,res)=>{
+    res.status(200).json(true)
+}
 
 
 
-export {registerUser,loginUser,checkEmail};
+
+
+export {registerUser,loginUser,checkEmail,checkAuth};
