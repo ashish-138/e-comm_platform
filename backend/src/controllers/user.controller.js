@@ -1,7 +1,6 @@
 import User from "../models/user.model.js"
-import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import { generateToken } from "../utils/jwtverification.js"
+import jwt from "jsonwebtoken"
 
 
 const registerUser = async (req, res) => {
@@ -65,7 +64,7 @@ const loginUser = async (req, res) => {
                     isAdmin: user.isAdmin
                 }
 
-                const token = await generateToken(tokenData)
+                const token = await jwt.sign(tokenData,process.env.TOKEN_SECRET)
 
                 const data = {
                     _id: user._id,
