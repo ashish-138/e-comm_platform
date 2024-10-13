@@ -5,6 +5,7 @@ import { addCart, delCart } from "../redux/action";
 import { json, Link } from "react-router-dom";
 import axios from "axios";
 import { setHeader } from "../services/Header";
+import { CartUpdate } from "../services/CartUpdate";
 
 
 const Cart = () => {
@@ -27,12 +28,20 @@ const Cart = () => {
   };
 
   const addItem = async (product) => {
-   
+    try {
       dispatch(addCart(product));
-      updatCart();
+      CartUpdate()
+  } catch (error) {
+      console.error('Error adding product to cart:', error);
+  }
   };
   const removeItem = (product) => {
+    try {
     dispatch(delCart(product));
+    CartUpdate()
+    } catch (error) {
+      console.error('Error delete product to cart:', error);
+    }
   };
 
   async function updatCart() {

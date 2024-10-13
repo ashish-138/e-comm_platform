@@ -1,4 +1,4 @@
-import Order from "../models/order.model.js"
+import Orders from "../models/order.model.js"
 
 
 
@@ -6,10 +6,13 @@ import Order from "../models/order.model.js"
 const saveOrders = async(req,res)=>{
    
     try {
-        const newOrder = new Order({
+        const newOrder = new Orders({
             userId:req.user._id,
-            orderedItems:req.body.data.orderedItems,
-            totalPrice:req.body.data.totalPrice
+            orderedItems:req.body.orderedItems,
+            totalPrice:req.body.totalPrice,
+            fullName:req.body.fullName,
+            address:req.body.address,
+            email:req.body.email,
         })
         await newOrder.save()
         res.status(200).json("Order placed successfully")
@@ -21,7 +24,7 @@ const saveOrders = async(req,res)=>{
 
 const getOrders = async(req,res)=>{
    try{
-        const result = await Order.find({userId:req.user._id})
+        const result = await Orders.find({userId:req.user._id})
         res.status(200).json(result)
     } catch (error) {
         res.status(500).json(error)

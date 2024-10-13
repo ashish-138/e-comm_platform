@@ -8,7 +8,6 @@ import {
   Home,
   Product,
   Products,
-  AboutPage,
   ContactPage,
   Cart,
   Login,
@@ -30,7 +29,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/product" element={<Products />} />
           <Route path="/product/:id" element={<Product />} />
-          <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />

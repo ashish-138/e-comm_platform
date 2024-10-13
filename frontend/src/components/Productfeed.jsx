@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addCart } from "../redux/action";
-
+import { Getauth } from "../services/Auth";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import { setHeader } from "../services/Header";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { CartUpdate } from "../services/CartUpdate";
 
 const Productfeed = () => {
   const [data, setData] = useState([]);
@@ -17,9 +18,16 @@ const Productfeed = () => {
 
   const dispatch = useDispatch();
 
-  const addProduct = (product) => {
-    dispatch(addCart(product));
-  };
+  const addProduct = async (product) => {
+    try {
+        dispatch(addCart(product));
+        CartUpdate();
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+    }
+};
+
+
 
   useEffect(() => {
     const getProducts = async () => {
@@ -30,11 +38,28 @@ const Productfeed = () => {
         setFilter(response.data);
         setLoading(false);
       }
+      const auth = Getauth()
+        if(auth){
+        checkprelogin()
+        }
 
       return () => {
         componentMounted = false;
       };
     };
+    
+    async function checkprelogin(){
+      try {
+          const user = await axios.get("http://127.0.0.1:8000/api/v1/user/checkauth",setHeader())
+          if(user.data){
+          
+          }
+      } catch (error) {
+          console.log(error);
+      }
+    }
+
+    
 
     getProducts();
   }, []);

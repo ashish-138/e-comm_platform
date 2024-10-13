@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { addCart } from "../redux/action";
 import axios from "axios"
 import { Footer, Navbar } from "../components";
+import { CartUpdate } from "../services/CartUpdate";
 
 const Product = () => {
   const { id } = useParams();
@@ -17,7 +18,13 @@ const Product = () => {
   const dispatch = useDispatch();
 
   const addProduct = (product) => {
-    dispatch(addCart(product));
+    try {
+      dispatch(addCart(product));
+      CartUpdate();
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+    }
+    
   };
 
   useEffect(() => {

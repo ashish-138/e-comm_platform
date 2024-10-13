@@ -1,39 +1,60 @@
-import { useState, useRef, useEffect , useDispatch} from "react";
+import { useState, useRef, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addCart } from "../redux/action";
 import { Link, useNavigate } from "react-router-dom";
 import { Footer, Navbar } from "../components";
 import toast from "react-hot-toast";
-import { Setauth,Getauth } from "../services/Auth";
+import { Setauth, Getauth } from "../services/Auth";
 import axios from "axios"
 import { setHeader } from "../services/Header";
-import { addCart } from "../redux/action";
+import { CartUpdate } from "../services/CartUpdate";
 
 const Login = () => {
 
   const [errmsg, setErrmsg] = useState(false)
-  const dispatch = useDispatch();
   const email = useRef();
   const password = useRef();
   const history = useNavigate()
 
+  const dispatch = useDispatch();
 
 
-  useEffect(()=>{
+
+  useEffect(() => {
     const auth = Getauth()
-    if(auth){
-    checkprelogin()
+    if (auth) {
+      checkprelogin()
     }
-},[errmsg])
+  }, [errmsg])
 
-async function checkprelogin(){
-  try {
-      const user = await axios.get("http://localhost:8000/api/v1/user/checkauth",setHeader())
-      if(user.data){
-          history("/")
+  async function checkprelogin() {
+    try {
+      const user = await axios.get("http://localhost:8000/api/v1/user/checkauth", setHeader())
+      if (user.data) {
+        history("/")
       }
-  } catch (error) {
+    } catch (error) {
       console.log(error);
+    }
   }
-}
+
+  async function getuserCartfromServer() {
+    try {
+      const result = await axios.get("http://127.0.0.1:8000/api/v1/cart", setHeader())
+      result.data.forEach(e => {
+        const { qty } = e;
+        for (let i = 0; i < qty; i++) {
+          dispatch(addCart(e));
+        }
+      });
+      CartUpdate()
+
+    } catch (error) {
+      console.log(error);
+    }
+
+
+  }
 
 
 
@@ -47,21 +68,13 @@ async function checkprelogin(){
       const result = await axios.post("http://127.0.0.1:8000/api/v1/user/login", user);
       toast.success("Login successfully.");
       Setauth(result.data.token)
-      loadCartData()
+      getuserCartfromServer()
       history("/");
     } catch (err) {
       setErrmsg(true)
     }
   }
-const loadCartData = async() => {
-  const result = await axios.get("http://127.0.0.1:8000/api/v1/user/cart", setHeader());
-  result.data.forEach(item => {
-    const { product, quantity } = item;
-    for (let i = 0; i < quantity; i++) {
-        dispatch(addCart(product));
-    }
-})
-}
+
   const errorHandle = () => {
     setErrmsg(false)
   }

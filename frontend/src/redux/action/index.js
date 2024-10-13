@@ -13,3 +13,9 @@ export const delCart = (product) =>{
         payload:product
     }
 }
+
+export const delAllCart = (product) =>{
+    return {
+        type:"DELALLITEM",
+    }
+}

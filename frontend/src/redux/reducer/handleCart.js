@@ -36,6 +36,10 @@ const handleCart = (state = getInitialCart(), action) => {
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       return updatedCart;
 
+    case "DELALLITEM":
+        localStorage.removeItem("cart");
+        return [];
+
     default:
       return state;
   }

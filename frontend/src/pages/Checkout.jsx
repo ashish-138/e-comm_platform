@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect,useRef} from "react";
 import { Footer, Navbar } from "../components";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,12 +6,24 @@ import axios from "axios";
 import { Getauth } from "../services/Auth";
 import { setHeader } from "../services/Header";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { delAllCart } from "../redux/action";
+import { CartUpdate } from "../services/CartUpdate";
 
 
 
 const Checkout = () => {
   const state = useSelector((state) => state.handleCart);
   const history = useNavigate()
+  const dispatch = useDispatch();
+
+  const firstname = useRef();
+  const lastname = useRef();
+  const email = useRef();
+  const address = useRef();
+  const country = useRef();
+  const countryState = useRef();
+  const zip = useRef();
   
 
   useEffect(()=>{
@@ -35,6 +47,43 @@ const Checkout = () => {
         console.log(error);
     }
   }
+
+
+  const submitHandler = async(e)=>{
+        e.preventDefault();
+        let subtotal = 0;
+        let shipping = 30.0;
+        state.map((item) => {
+          return (subtotal += item.price * item.qty);
+        });
+        const productData = localStorage.getItem("cart");
+                if (productData) {
+                    const newData = JSON.parse(productData);
+                    const cartItems = newData.map(e => ({
+                        productId: e._id,
+                        qty: e.qty
+                    }));
+          const data = {
+          orderedItems:cartItems,
+          totalPrice:Math.round(subtotal + shipping),
+          fullName:firstname.current.value+" "+lastname.current.value,
+          address:address.current.value+" "+country.current.value+" "+countryState.current.value+" "+zip.current.value,
+          email:email.current.value
+         }
+         
+         try {
+          const response = await axios.post("http://localhost:8000/api/v1/order", data, setHeader());
+          dispatch(delAllCart());
+          CartUpdate();
+          toast.success("Order placed successfully.")
+          history("/")
+      } catch (error) {
+          console.log('Error posting order:');
+      }
+        }
+  }
+
+
 
   const EmptyCart = () => {
     return (
@@ -98,7 +147,7 @@ const Checkout = () => {
                   <h4 className="mb-0">Billing address</h4>
                 </div>
                 <div className="card-body">
-                  <form className="needs-validation" novalidate>
+                  <form className="needs-validation" onSubmit={submitHandler}>
                     <div className="row g-3">
                       <div className="col-sm-6 my-1">
                         <label for="firstName" className="form-label">
@@ -108,6 +157,7 @@ const Checkout = () => {
                           type="text"
                           className="form-control"
                           id="firstName"
+                          ref={firstname}
                           placeholder=""
                           required
                         />
@@ -124,6 +174,7 @@ const Checkout = () => {
                           type="text"
                           className="form-control"
                           id="lastName"
+                          ref={lastname}
                           placeholder=""
                           required
                         />
@@ -140,6 +191,7 @@ const Checkout = () => {
                           type="email"
                           className="form-control"
                           id="email"
+                          ref={email}
                           placeholder="you@example.com"
                           required
                         />
@@ -157,7 +209,8 @@ const Checkout = () => {
                           type="text"
                           className="form-control"
                           id="address"
-                          placeholder="1234 Main St"
+                          ref={address}
+                          placeholder="Your address"
                           required
                         />
                         <div className="invalid-feedback">
@@ -165,25 +218,14 @@ const Checkout = () => {
                         </div>
                       </div>
 
-                      <div className="col-12">
-                        <label for="address2" className="form-label">
-                          Address 2{" "}
-                          <span className="text-muted">(Optional)</span>
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="address2"
-                          placeholder="Apartment or suite"
-                        />
-                      </div>
+                      
 
                       <div className="col-md-5 my-1">
                         <label for="country" className="form-label">
                           Country
                         </label>
                         <br />
-                        <select className="form-select" id="country" required>
+                        <select className="form-select" id="country" ref={country} required>
                           <option value="">Choose...</option>
                           <option>India</option>
                         </select>
@@ -193,12 +235,17 @@ const Checkout = () => {
                       </div>
 
                       <div className="col-md-4 my-1">
-                        <label for="state" className="form-label">
+                        <label for="state" className="form-label" >
                           State
                         </label>
                         <br />
-                        <select className="form-select" id="state" required>
+                        <select className="form-select" id="state" ref={countryState} required>
                           <option value="">Choose...</option>
+                          <option>Gujarat</option>
+                          <option>Maharastra</option>
+                          <option>Madhya Pradesh</option>
+                          <option>Delhi</option>
+                          <option>Uttar Pradesh</option>
                           <option>Punjab</option>
                         </select>
                         <div className="invalid-feedback">
@@ -214,6 +261,7 @@ const Checkout = () => {
                           type="text"
                           className="form-control"
                           id="zip"
+                          ref={zip}
                           placeholder=""
                           required
                         />
@@ -237,7 +285,7 @@ const Checkout = () => {
                           className="form-control"
                           id="cc-name"
                           placeholder=""
-                          required
+                          
                         />
                         <small className="text-muted">
                           Full name as displayed on card
@@ -256,7 +304,7 @@ const Checkout = () => {
                           className="form-control"
                           id="cc-number"
                           placeholder=""
-                          required
+                          
                         />
                         <div className="invalid-feedback">
                           Credit card number is required
@@ -268,11 +316,11 @@ const Checkout = () => {
                           Expiration
                         </label>
                         <input
-                          type="text"
+                          type="date"
                           className="form-control"
                           id="cc-expiration"
                           placeholder=""
-                          required
+                          
                         />
                         <div className="invalid-feedback">
                           Expiration date required
@@ -288,7 +336,7 @@ const Checkout = () => {
                           className="form-control"
                           id="cc-cvv"
                           placeholder=""
-                          required
+                          
                         />
                         <div className="invalid-feedback">
                           Security code required

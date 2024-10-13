@@ -1,36 +1,40 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Getauth,Removeauth } from '../services/Auth'
+import { useDispatch } from "react-redux";
+import { delAllCart } from "../redux/action";
+import { Getauth, Removeauth } from '../services/Auth'
 import { setHeader } from '../services/Header'
 import axios from 'axios'
 
 const Navbar = () => {
     const state = useSelector(state => state.handleCart)
-    const [userAuth,setUserAuth] = useState(false)
+    const [userAuth, setUserAuth] = useState(false)
+    const dispatch = useDispatch();
 
 
-    useEffect(()=>{
+    useEffect(() => {
         const auth = Getauth()
-        if(auth){
-        checkprelogin()
+        if (auth) {
+            checkprelogin()
         }
-    },[userAuth])
-    
-    async function checkprelogin(){
-      try {
-          const user = await axios.get("http://localhost:8000/api/v1/user/checkauth",setHeader())
-          if(user.data){
-            setUserAuth(true)
-          }
-      } catch (error) {
-          console.log(error);
-      }
+    }, [userAuth])
+
+    async function checkprelogin() {
+        try {
+            const user = await axios.get("http://localhost:8000/api/v1/user/checkauth", setHeader())
+            if (user.data) {
+                setUserAuth(true)
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 
-    const logoutUser= ()=>{
+    const logoutUser = () => {
         Removeauth()
+        dispatch(delAllCart());
         setUserAuth(false)
     }
 
@@ -52,20 +56,14 @@ const Navbar = () => {
                             <NavLink className="nav-link" to="/product">Products</NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/about">About</NavLink>
-                        </li>
-                        <li className="nav-item">
                             <NavLink className="nav-link" to="/contact">Contact</NavLink>
                         </li>
-                        {userAuth?<li className="nav-item">
-                            <NavLink className="nav-link" to="/contact">My Orders</NavLink>
-                        </li>:""}
                     </ul>
                     <div className="buttons text-center">
-                        {!userAuth?<><NavLink to="/login" className="btn btn-outline-dark m-2"><i className="fa fa-sign-in mr-1"></i> Login</NavLink>
-                        <NavLink to="/register" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> Register</NavLink></>:""}
+                        {!userAuth ? <><NavLink to="/login" className="btn btn-outline-dark m-2"><i className="fa fa-sign-in mr-1"></i> Login</NavLink>
+                            <NavLink to="/register" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> Register</NavLink></> : ""}
                         <NavLink to="/cart" className="btn btn-outline-dark m-2"><i className="fa fa-cart-shopping mr-1"></i> Cart ({state.length}) </NavLink>
-                        {userAuth?<NavLink to="/" onClick={logoutUser} className="btn btn-outline-dark m-2"><i className="fa fa-sign-out mr-1"></i> Log Out</NavLink>:""}
+                        {userAuth ? <NavLink to="/" onClick={logoutUser} className="btn btn-outline-dark m-2"><i className="fa fa-sign-out mr-1"></i> Log Out</NavLink> : ""}
                     </div>
                 </div>
 

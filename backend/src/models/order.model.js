@@ -7,12 +7,25 @@ const OrderSchema = new mongoose.Schema({
     },
     orderedItems: [{
         productId: { type: String, required: true },
-        quantity: { type: Number, required: true }
+        qty: { type: Number, required: true }
     }],
     totalPrice: {
         type: Number,
         required: true
+    },
+    fullName:{
+        type: String,
+        required: true,
+    },
+    address:{
+        type: String,
+        required: true,
+    },
+    email:{
+        type: String,
+        required: true,
     }
+
 },
     { timestamps: true }
 )

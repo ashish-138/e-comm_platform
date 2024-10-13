@@ -1,77 +1,51 @@
 import Cart from "../models/cart.model.js"
+import Product from "../models/product.model.js"
 
 
-const getCartItems = async(req,res)=>{
-    try {
-        const cart = await Cart.findOne({ userId:req.user._id })
-        .populate({
-            path: 'cartItems.productId', 
-            model: 'Products' 
-        })
-        .exec();
 
-        if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
-        }
-
-        const cartItems = cart.cartItems.map(item => ({
-            product: item.productId, 
-            quantity: item.quantity
-        }));
-
-        res.status(200).json(cartItems);
-
-    return cartItems.map(item => ({
-        product: item.productId,
-        quantity: item.quantity
-    }));
-    } catch (error) {
-        res.status(500).json(error)
-    }
-}
-
-
-const addCartItems = async(req,res)=>{
+const getCartItems = async (req, res) => {
     try {
 
-        const { userId, cartItems } = req.body;
-
-        if (!userId || !Array.isArray(cartItems) || cartItems.length === 0) {
-            return res.status(400).json({ message: 'Invalid data format. Expected userId and a non-empty array of cart items.' });
+        const cartItem = await Cart.findOne({ userId: req.user._id })
+        const newData = []
+        if (cartItem) {
+            for (const x of cartItem.cartItems) {
+                const data = await Product.findOne({ _id: x.productId });
+                if (data) {
+                    newData.push({ ...data.toObject(), qty: x.qty });
+                }
+            }
         }
-
-        const cart = new Cart({
-            userId,
-            cartItems
-        });
-
-        await cart.save();
-    } catch (error) {
-        res.status(500).json(error)
-    }
-}
-
-const updateCart = async(req,res)=>{
-    try {       
-
-        const existingCart = await Cart.findOne({ userId: req.user._id });
-        if (existingCart) {
-            await Cart.deleteOne({ userId: req.user._id });
-        }
-        if (req.body.data === null || !Array.isArray(req.body.data)) {
-            res.status(200)
-        }
-        const cart = new Cart({
-            userId: req.user._id,
-            cartItems: req.body.data
-        });
-
-        await cart.save();
-        res.status(200)
+        res.status(200).json(newData)
     } catch (error) {
         res.status(500).json(error)
     }
 }
 
 
-export {addCartItems,updateCart,getCartItems}
+const updateCart = async (req, res) => {
+    try {
+        const cartlength = req.body.cartItems
+        if (cartlength === undefined) {
+            await Cart.findOneAndUpdate(
+                { userId: req.user._id },
+                { $set: { cartItems: [] } },
+                { new: true, upsert: true });
+        } else {
+            const newCartItems = req.body.cartItems
+            await Cart.findOneAndUpdate(
+                { userId: req.user._id },
+                { $set: { cartItems: newCartItems } },
+                { new: true, upsert: true }
+            );
+            res.status(200).json('Cart updated successfully.');
+        }
+    } catch (error) {
+        console.error('Error updating cart:', error);
+        res.status(500).json({ message: 'Internal server error', error });
+    }
+};
+
+
+
+export { updateCart, getCartItems }
