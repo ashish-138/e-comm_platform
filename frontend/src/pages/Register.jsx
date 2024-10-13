@@ -13,6 +13,7 @@ const Register = () => {
     const email = useRef();
     const password = useRef();
     const history = useNavigate();
+    const apiUrl = process.env.REACT_APP_BASE_URL
 
 
     useEffect(()=>{
@@ -24,7 +25,7 @@ const Register = () => {
     
     async function checkprelogin(){
       try {
-          const user = await axios.get(`${REACT_APP_BASE_URL}/api/v1/user/checkauth`,setHeader())
+          const user = await axios.get(`${apiUrl}/api/v1/user/checkauth`,setHeader())
           console.log(user);
           if(user.data){
               history("/")
@@ -43,7 +44,7 @@ const Register = () => {
                 password: password.current.value
             }
             try {
-                const result = await axios.post(`${REACT_APP_BASE_URL}/api/v1/user/register`, user);
+                const result = await axios.post(`${apiUrl}/api/v1/user/register`, user);
                 if(result.status === 200){
                 toast.success("Registered successfully.");
                 history("/login")}
@@ -58,7 +59,7 @@ const Register = () => {
 
     const onblurHandle = async()=>{
         try {
-            const result = await axios.get(`${REACT_APP_BASE_URL}/api/v1/user/check-email/${email.current.value}`)
+            const result = await axios.get(`${apiUrl}/api/v1/user/check-email/${email.current.value}`)
             result.data?setErrmsg(true):setErrmsg(false);
             console.log(result);
         } catch (error) {

@@ -11,6 +11,7 @@ const Navbar = () => {
     const state = useSelector(state => state.handleCart)
     const [userAuth, setUserAuth] = useState(false)
     const dispatch = useDispatch();
+    const apiUrl = process.env.REACT_APP_BASE_URL
 
 
     useEffect(() => {
@@ -22,7 +23,7 @@ const Navbar = () => {
 
     async function checkprelogin() {
         try {
-            const user = await axios.get(`${REACT_APP_BASE_URL}/api/v1/user/checkauth`, setHeader())
+            const user = await axios.get(`${apiUrl}/api/v1/user/checkauth`, setHeader())
             if (user.data) {
                 setUserAuth(true)
             }
