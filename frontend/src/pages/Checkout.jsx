@@ -38,7 +38,7 @@ const Checkout = () => {
   
   async function checkprelogin(){
     try {
-        const user = await axios.get("http://localhost:8000/api/v1/user/checkauth",setHeader())
+        const user = await axios.get(`${REACT_APP_BASE_URL}/api/v1/user/checkauth`,setHeader())
         if(!user.data){
           toast.error("Please Login for checkout!");
           history("/login")
@@ -72,7 +72,7 @@ const Checkout = () => {
          }
          
          try {
-          const response = await axios.post("http://localhost:8000/api/v1/order", data, setHeader());
+          const response = await axios.post(`${REACT_APP_BASE_URL}/api/v1/order`, data, setHeader());
           dispatch(delAllCart());
           CartUpdate();
           toast.success("Order placed successfully.")

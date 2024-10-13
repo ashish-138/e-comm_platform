@@ -48,7 +48,7 @@ const Cart = () => {
     try {
       const cartItems = transformToCartItems();
       console.log(cartItems);
-      const result = await axios.put("http://127.0.0.1:8000/api/v1/cart", cartItems, setHeader);
+      const result = await axios.put(`${REACT_APP_BASE_URL}/api/v1/cart`, cartItems, setHeader);
       console.log(result)
     } catch (error) {
       
