@@ -14,6 +14,7 @@ const Product = () => {
   const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const apiUrl = process.env.REACT_APP_BASE_URL
 
   const dispatch = useDispatch();
 
@@ -31,12 +32,12 @@ const Product = () => {
     const getProduct = async () => {
       setLoading(true);
       setLoading2(true);
-      const response = await axios.get(`${REACT_APP_BASE_URL}/api/v1/product/${id}`);
+      const response = await axios.get(`${apiUrl}/api/v1/product/${id}`);
       const data = response.data
       setProduct(data);
       setLoading(false);
       const response2 = await axios.get(
-        `${REACT_APP_BASE_URL}/api/v1/product/category/${data.category}`
+        `${apiUrl}/api/v1/product/category/${data.category}`
       );
       const data2 = response2.data;
       setSimilarProducts(data2);

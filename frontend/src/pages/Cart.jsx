@@ -11,6 +11,7 @@ import { CartUpdate } from "../services/CartUpdate";
 const Cart = () => {
   const state = useSelector((state) => state.handleCart);
   const dispatch = useDispatch();
+  const apiUrl = process.env.REACT_APP_BASE_URL
 
   const EmptyCart = () => {
     return (
@@ -48,7 +49,7 @@ const Cart = () => {
     try {
       const cartItems = transformToCartItems();
       console.log(cartItems);
-      const result = await axios.put(`${REACT_APP_BASE_URL}/api/v1/cart`, cartItems, setHeader);
+      const result = await axios.put(`${apiUrl}/api/v1/cart`, cartItems, setHeader);
       console.log(result)
     } catch (error) {
       

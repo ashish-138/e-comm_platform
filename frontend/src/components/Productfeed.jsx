@@ -15,6 +15,7 @@ const Productfeed = () => {
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
   let componentMounted = true;
+  const apiUrl = process.env.REACT_APP_BASE_URL
 
   const dispatch = useDispatch();
 
@@ -32,7 +33,7 @@ const Productfeed = () => {
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
-      const response = await axios.get(`${REACT_APP_BASE_URL}/api/v1/product`);
+      const response = await axios.get(`${apiUrl}/api/v1/product`);
       if (componentMounted) {
         setData(response.data);
         setFilter(response.data);
@@ -50,7 +51,7 @@ const Productfeed = () => {
     
     async function checkprelogin(){
       try {
-          const user = await axios.get(`${REACT_APP_BASE_URL}/api/v1/user/checkauth`,setHeader())
+          const user = await axios.get(`${apiUrl}/api/v1/user/checkauth`,setHeader())
           if(user.data){
           
           }
