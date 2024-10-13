@@ -32,7 +32,7 @@ const Productfeed = () => {
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
-      const response = await axios.get("http://127.0.0.1:8000/api/v1/product");
+      const response = await axios.get(`${REACT_APP_BASE_URL}/api/v1/product`);
       if (componentMounted) {
         setData(response.data);
         setFilter(response.data);
@@ -50,7 +50,7 @@ const Productfeed = () => {
     
     async function checkprelogin(){
       try {
-          const user = await axios.get("http://127.0.0.1:8000/api/v1/user/checkauth",setHeader())
+          const user = await axios.get(`${REACT_APP_BASE_URL}/api/v1/user/checkauth`,setHeader())
           if(user.data){
           
           }

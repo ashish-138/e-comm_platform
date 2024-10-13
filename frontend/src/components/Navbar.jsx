@@ -22,7 +22,7 @@ const Navbar = () => {
 
     async function checkprelogin() {
         try {
-            const user = await axios.get("http://localhost:8000/api/v1/user/checkauth", setHeader())
+            const user = await axios.get(`${REACT_APP_BASE_URL}/api/v1/user/checkauth`, setHeader())
             if (user.data) {
                 setUserAuth(true)
             }

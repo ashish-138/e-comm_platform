@@ -29,7 +29,7 @@ const Login = () => {
 
   async function checkprelogin() {
     try {
-      const user = await axios.get("http://localhost:8000/api/v1/user/checkauth", setHeader())
+      const user = await axios.get(`${REACT_APP_BASE_URL}/api/v1/user/checkauth`, setHeader())
       if (user.data) {
         history("/")
       }
@@ -40,7 +40,7 @@ const Login = () => {
 
   async function getuserCartfromServer() {
     try {
-      const result = await axios.get("http://127.0.0.1:8000/api/v1/cart", setHeader())
+      const result = await axios.get(`${REACT_APP_BASE_URL}/api/v1/cart`, setHeader())
       result.data.forEach(e => {
         const { qty } = e;
         for (let i = 0; i < qty; i++) {
@@ -65,7 +65,7 @@ const Login = () => {
         email: email.current.value,
         password: password.current.value
       }
-      const result = await axios.post("http://127.0.0.1:8000/api/v1/user/login", user);
+      const result = await axios.post(`${REACT_APP_BASE_URL}/api/v1/user/login`, user);
       toast.success("Login successfully.");
       Setauth(result.data.token)
       getuserCartfromServer()

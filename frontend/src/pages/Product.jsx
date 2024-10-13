@@ -31,12 +31,12 @@ const Product = () => {
     const getProduct = async () => {
       setLoading(true);
       setLoading2(true);
-      const response = await axios.get(`http://127.0.0.1:8000/api/v1/product/${id}`);
+      const response = await axios.get(`${REACT_APP_BASE_URL}/api/v1/product/${id}`);
       const data = response.data
       setProduct(data);
       setLoading(false);
       const response2 = await axios.get(
-        `http://127.0.0.1:8000/api/v1/product/category/${data.category}`
+        `${REACT_APP_BASE_URL}/api/v1/product/category/${data.category}`
       );
       const data2 = response2.data;
       setSimilarProducts(data2);
