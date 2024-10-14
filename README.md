@@ -5,7 +5,7 @@ A demo Ecommerce Website made on MERN stack technology.
 
 
 ## Demo
-e-comm-platform.vercel.app
+[https://e-comm-platform.vercel.app]
 ## Features
 -> Sign Up / Login: Allow users to create accounts and log in.
 
